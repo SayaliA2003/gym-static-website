@@ -21,10 +21,8 @@ pipeline {
         stage('Deploy to Target Server') {
             steps {
                 sshagent([SSH_CREDENTIAL]) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} 'mkdir -p ${REMOTE_PATH}'
-                        scp -o StrictHostKeyChecking=no -r * ${REMOTE_USER}@${SERVER_IP}:${REMOTE_PATH}
-                    """
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} 'mkdir -p ${REMOTE_PATH} && rm -rf ${REMOTE_PATH}/*'"
+                    sh "scp -o StrictHostKeyChecking=no -r ./* ${REMOTE_USER}@${SERVER_IP}:${REMOTE_PATH}/"
                 }
             }
         }
